@@ -1,0 +1,34 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ops-tools
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      containers:
+      - image: datatactics/ops-tools
+        imagePullPolicy: Always
+        name: ops-tools
+        resources:
+          limits:
+            cpu: 1
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        ports:
+        - name: "ssh"
+          containerPort: 22
+          protocol: "TCP"
+        volumeMounts:
+        - mountPath: /home/isb
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: ops-tools
+
